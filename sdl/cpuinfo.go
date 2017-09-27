@@ -19,6 +19,22 @@ static inline SDL_bool SDL_HasAVX()
 }
 #endif
 
+#if !(SDL_VERSION_ATLEAST(2,0,4))
+#pragma message("SDL_HasAVX2 is not supported before SDL 2.0.4")
+static inline SDL_bool SDL_HasAVX2()
+{
+	return SDL_FALSE;
+}
+#endif
+
+#if !(SDL_VERSION_ATLEAST(2,0,6))
+#pragma message("SDL_HasNEON is not supported before SDL 2.0.4")
+static inline SDL_bool SDL_HasNEON()
+{
+	return SDL_FALSE;
+}
+#endif
+
 */
 import "C"
 
@@ -101,4 +117,16 @@ func GetSystemRAM() int {
 // (https://wiki.libsdl.org/SDL_HasAVX)
 func HasAVX() bool {
 	return C.SDL_HasAVX() > 0
+}
+
+// HasAVX2 reports whether the CPU has AVX2 features.
+// (https://wiki.libsdl.org/SDL_HasAVX2)
+func HasAVX2() bool {
+	return C.SDL_HasAVX2() > 0
+}
+
+// HasNEON reports whether the CPU has NEON features.
+// (https://wiki.libsdl.org/SDL_HasNEON)
+func HasNEON() bool {
+	return C.SDL_HasNEON() > 0
 }

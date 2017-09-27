@@ -2,6 +2,14 @@ package sdl
 
 /*
 #include "sdl_wrapper.h"
+
+#if !(SDL_VERSION_ATLEAST(2,0,6))
+#pragma message("SDL_DuplicateSurface is not supported before SDL 2.0.6")
+static SDL_Surface *SDL_DuplicateSurface(SDL_Surface *surface)
+{
+	return 0;
+}
+#endif
 */
 import "C"
 import "unsafe"
@@ -374,4 +382,16 @@ func (surface *Surface) Pixels() []byte {
 // Data returns the pointer to the actual pixel data of the surface.
 func (surface *Surface) Data() unsafe.Pointer {
 	return surface.pixels
+}
+
+// TODO
+func (surface *Surface) Duplicate() (newSurface *Surface, err error) {
+	_newSurface := C.SDL_DuplicateSurface(surface.cptr())
+	if _newSurface == nil {
+		err = GetError()
+		return
+	}
+
+	newSurface = (*Surface)(unsafe.Pointer(_newSurface))
+	return
 }

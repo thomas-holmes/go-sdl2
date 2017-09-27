@@ -1,6 +1,28 @@
 package sdl
 
-// #include "sdl_wrapper.h"
+/*
+#include "sdl_wrapper.h"
+
+#if !(SDL_VERSION_ATLEAST(2,0,6))
+#pragma message("SDL_GameControllerGetVendor is not supported before SDL 2.0.6")
+static Uint16 SDL_GameControllerGetVendor(SDL_GameController * gamecontroller)
+{
+	return 0;
+}
+
+#pragma message("SDL_GameControllerGetProduct is not supported before SDL 2.0.6")
+static Uint16 SDL_GameControllerGetProduct(SDL_GameController * gamecontroller)
+{
+	return 0;
+}
+
+#pragma message("SDL_GameControllerGetProductVersion is not supported before SDL 2.0.6")
+static Uint16 SDL_GameControllerGetProductVersion(SDL_GameController * gamecontroller)
+{
+	return 0;
+}
+#endif
+*/
 import "C"
 import "unsafe"
 import "encoding/binary"
@@ -119,6 +141,27 @@ func GameControllerOpen(index int) *GameController {
 // (https://wiki.libsdl.org/SDL_GameControllerName)
 func (ctrl *GameController) Name() string {
 	return C.GoString(C.SDL_GameControllerName(ctrl.cptr()))
+}
+
+// GetVendor returns the USB vendor ID of an opened controller, if available.
+// If the vendor ID isn't available this function returns 0.
+// (https://wiki.libsdl.org/SDL_GameControllerGetProduct)
+func (ctrl *GameController) GetVendor() uint16 {
+	return uint16(C.SDL_GameControllerGetVendor(ctrl.cptr()))
+}
+
+// GetProduct returns the USB product ID of an opened controller, if available.
+// If the product ID isn't available this function returns 0.
+// (https://wiki.libsdl.org/SDL_GameControllerGetProduct)
+func (ctrl *GameController) GetProduct() uint16 {
+	return uint16(C.SDL_GameControllerGetProduct(ctrl.cptr()))
+}
+
+// GetProductVersion returns the product version of an opened controller, if available.
+// If the product version isn't available this function returns 0.
+// (https://wiki.libsdl.org/SDL_GameControllerGetProductVersion)
+func (ctrl *GameController) GetProductVersion() uint16 {
+	return uint16(C.SDL_GameControllerGetProductVersion(ctrl.cptr()))
 }
 
 // GetAttached reports whether a controller has been opened and is currently connected.
